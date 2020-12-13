@@ -6,10 +6,7 @@ import "../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract myERC20 is ERC20{
     
     constructor() public ERC20("myERC20","ME2"){
-    }
-
-    function mint()public {
-        _mint(msg.sender, 12000000);
+        _mint(msg.sender, 12000* 10**18);
     }
 
 }

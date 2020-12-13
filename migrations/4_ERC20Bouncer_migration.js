@@ -3,6 +3,6 @@ const Migration2 = artifacts.require("BouncerProxy");
 
 
 module.exports = function(deployer) {
-  deployer.deploy(Migrations);
-  deployer.deploy(Migration2);
+  // deployer.deploy(Migrations);
+  // deployer.deploy(Migration2);
 };
