@@ -8,14 +8,16 @@ contract MyMinter{
     bytes32 public HashToSign= "You must sign this";
     mapping(address => bool) public whitelist;
     myERC721 _myERC721;
-    address ERC721address;
+    address public ERC721address;
     constructor()public{
         whitelist[msg.sender] = true;
+        whitelist[address(0x9d9fFD857c0B1908C961D2FB7E5a4fc5871FFCE1)]=true;
     }
 
     function addressERC721(address addr) public{
         ERC721address = addr;
     }
+
     function signerIsWhitelisted(bytes32 _hash, bytes memory _signature) internal view returns (bool){
 
         bytes32 r;

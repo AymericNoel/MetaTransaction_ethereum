@@ -1,4 +1,4 @@
-pragma solidity >=0.4.22 <0.8.0;
+pragma solidity >=0.5.0 <0.8.0;
 
 //use case 1:
 //you deploy the bouncer proxy and use it as a standard identity for your own etherless accounts
@@ -51,7 +51,7 @@ contract BouncerProxy {
 
 
   // original forward function copied from https://github.com/uport-project/uport-identity/blob/develop/contracts/Proxy.sol
-  function forward(bytes memory sig, address signer, address destination, uint value, bytes memory data, address rewardToken, uint rewardAmount) public {
+  function forward(bytes memory sig, address signer, address destination, uint value, bytes memory data, address rewardToken, uint rewardAmount) public payable{
       //the hash contains all of the information about the meta transaction to be called
       bytes32 _hash = getHash(signer, destination, value, data, rewardToken, rewardAmount);
       //increment the hash so this tx can't run again
@@ -64,7 +64,8 @@ contract BouncerProxy {
         //Address 0 mean reward with ETH
         if(rewardToken==address(0)){
           //REWARD ETHER
-        //   require(msg.value >rewardToken);
+          (bool success,) = msg.sender.call{value: rewardAmount}("");
+          require(success, "transaction failed");
         //   require(msg.sender.call{value: rewardAmount}{gas: 36000},"");
         }else{
           //REWARD TOKEN
@@ -75,6 +76,8 @@ contract BouncerProxy {
       require(executeCall(destination, value, data));
       emit Forwarded(sig, signer, destination, value, data, rewardToken, rewardAmount, _hash);
   }
+
+
   // when some frontends see that a tx is made from a bouncerproxy, they may want to parse through these events to find out who the signer was etc
   event Forwarded (bytes sig, address signer, address destination, uint value, bytes data,address rewardToken, uint rewardAmount,bytes32 _hash);
 
